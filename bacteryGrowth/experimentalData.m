@@ -2,33 +2,37 @@ clear all; close all;
 %% Load Experimental Data
 load('data/RawData.mat')
 
-%% Calibration Courves Plot
-plotTTDCurves(Calibration.Time, Calibration.Data)
-title('Calibration Curves')
-
-%% Measurements Couves Plot
-plotTTDCurves(Measurement.Time, Measurement.Data)
-title('Measurement Curves')
+% %% Calibration Courves Plot
+% plotTTDCurves(Calibration.Time, Calibration.Data)
+% title('Calibration Curves')
+% 
+% %% Measurements Couves Plot
+% plotTTDCurves(Measurement.Time, Measurement.Data)
+% title('Measurement Curves')
 
 %% Prefiltering
 % we remove the 5 first values from measurement and the 8 first from
 % Calibration
 
+shift_measurement = 7;
+shift_calibration = 5;
 % Calibration
-timeCalibration = Calibration.Time([8 : end], :);
-filtCalibrationData = Calibration.Data([8 : end], :);
+timeCalibration = Calibration.Time([shift_calibration : end], :);
+filtCalibrationData = Calibration.Data([shift_calibration : end], :);
 
 % Measure 
-timeMeasure = Measurement.Time([5 : end], :);
-filtMeasurementData = Measurement.Data([5 : end], :);
+timeMeasure = Measurement.Time([shift_measurement : end], :);
+filtMeasurementData = Measurement.Data([shift_measurement : end], :);
 
 % Plot data again
-plotTTDCurves(timeCalibration, filtCalibrationData)
+fig_calibration = plotTTDCurves(timeCalibration, filtCalibrationData)
 title('Calibration Curves')
 
-plotTTDCurves(timeMeasure, filtMeasurementData)
+fig_measure = plotTTDCurves(timeMeasure, filtMeasurementData)
 title('Measurement Curves')
 
 %% Estimate TTD
-low_thresh_level = 0.3; % Optical density threshold level
-indexes = find(Measurement.Data == low_thresh_level);
+low_thresh_level = 0.2; % Optical density threshold level
+high_thresh_level = 0.4; % Optical density threshold level
+idx_low = find(filtMeasurementData == low_thresh_level);
+idx_high = find(filtMeasurementData == high_thresh_level);
