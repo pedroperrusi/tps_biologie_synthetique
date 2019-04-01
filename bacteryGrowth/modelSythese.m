@@ -61,7 +61,7 @@ semilogx(n, u_second, 'LineWidth', 2);
 legend('u1', 'u2')
 title('Mi')
 xlabel('Population (log(n))')
-ylabel('u')C
+ylabel('u')
 subplot(rows,cols,3);
 loglog(t, d_n1, 'LineWidth', 2);
 hold on; grid on;
