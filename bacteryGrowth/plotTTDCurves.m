@@ -1,14 +1,12 @@
-function [ fig ] = plotTTDCurves( time, curves )
+function plotTTDCurves( time, curves, lw )
 %PLOTTTDCURVES Summary of this function goes here
 %   Detailed explanation goes here
     [~, numPlot] = size(curves);
 
-    fig = figure; hold on; grid on;
+    hold on; grid on;
     for i = 1 : numPlot
-       semilogx(time, curves(:,i), 'LineWidth', 2)
+       plot(time, curves(:,i), 'LineWidth', lw)
     end
-    xlabel('log(N)')
-    ylabel('Optical Density')
 
 end
 

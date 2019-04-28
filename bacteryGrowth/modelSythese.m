@@ -47,26 +47,35 @@ d_n2 = d_population(n, u_second, alpha);
 
 
 %% Plot curbes
+lgdSize = 30;
+tickSize = 25;
+axisSize = 30;
+TitleSize = 40;
+lineW = 8;
+
 rows = 2; cols = 2;
 subplot(rows,cols,1)
-semilogx(t, alpha, 'LineWidth', 2);
+semilogx(t, alpha, 'LineWidth', lineW);
 hold on; grid on;
-title('apha');
-xlabel('Temps (log(ms))')
-ylabel('Alpha')
+ax = gca; ax.FontSize = tickSize; 
+title('Apha', 'FontSize', TitleSize);
+xlabel('Temps (log(ms))', 'FontSize', axisSize)
+ylabel('Alpha(t)', 'FontSize', axisSize)
 subplot(rows,cols,2)
-semilogx(n, u_first, 'LineWidth', 2);
+semilogx(n, u_first, 'LineWidth', lineW);
 hold on; grid on;
-semilogx(n, u_second, 'LineWidth', 2);
-legend('u1', 'u2')
-title('Mi')
-xlabel('Population (log(n))')
-ylabel('u')
+ax = gca; ax.FontSize = tickSize; 
+semilogx(n, u_second, 'LineWidth', lineW);
+lgd = legend('estime1', 'estime2'); lgd.FontSize = lgdSize;
+title('Mi', 'FontSize', TitleSize)
+xlabel('Population (log(n))', 'FontSize', axisSize)
+ylabel('u(n)', 'FontSize', axisSize)
 subplot(rows,cols,3);
-loglog(t, d_n1, 'LineWidth', 2);
+loglog(t, d_n1, 'LineWidth', lineW);
 hold on; grid on;
-loglog(t, d_n2, 'LineWidth', 2);
-title('Derive population')
-xlabel('Temps (log(ms))')
-ylabel('log(d(n))')
-legend('estime1', 'estime2')
+ax = gca; ax.FontSize = tickSize; 
+loglog(t, d_n2, 'LineWidth', lineW);
+title('Derive population', 'FontSize', TitleSize)
+xlabel('Temps (log(ms))', 'FontSize', axisSize)
+ylabel('log(d(n))', 'FontSize', axisSize)
+lgd = legend('estime1', 'estime2'); lgd.FontSize = lgdSize;

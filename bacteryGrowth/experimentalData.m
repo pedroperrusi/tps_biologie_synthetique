@@ -1,4 +1,11 @@
 clear all; close all;
+
+lgdSize = 30;
+tickSize = 25;
+axisSize = 30;
+TitleSize = 40;
+lineW = 8;
+
 %% Load Experimental Data
 load('data/RawData.mat')
 
@@ -31,13 +38,15 @@ filtMeasurementData = Measurement.Data([shift_measurement : end], [1 : numCurves
 % filtCalibrationData = filtCalibrationData - filtCalibrationData(:, 1);
 % filtMeasurementData = filtMeasurementData - filtMeasurementData(:, 1);
 
-% Plot data again
-fig_calibration = plotTTDCurves(timeCalibration, filtCalibrationData);
-title('Calibration Curves')
-
-fig_measure = plotTTDCurves(timeMeasure, filtMeasurementData);
-title('Measurement Curves')
-
+subplot(2,2,1)
+plotTTDCurves(timeMeasure, filtMeasurementData, lineW);
+set(gca,'xscale','log')
+ax = gca; ax.FontSize = tickSize;
+title('Measurement Curves', 'FontSize', TitleSize)
+xlabel('log(N)', 'FontSize', axisSize)
+ylabel('Optical Density', 'FontSize', axisSize)
+xlim([5, 14]);
+ylim([0, 0.6]);
 %% Estimate TTD
 % Based on the first measurement
 [L, numCurves] = size(filtMeasurementData);
@@ -49,21 +58,41 @@ n = 1;
 p = zeros(numCurves, n+1);
 TTD1 = zeros(numCurves, 1);
 
-figure; hold on; grid on;
+subplot(2,2,2)
+hold on; grid on;
 for i = 1 : numCurves
     % estimate TTD from each curve
     TTD(i, :) = getTTD(timeMeasure, filtMeasurementData(:,i), thresh_levels);
-    semilogx(thresh_levels, TTD(i, :), 'o');
+    plot(thresh_levels, TTD(i, :), 'o', 'LineWidth', lineW);
     % estimate linear fit
     p(i, :) = polyfit(TTD(i, :), thresh_levels, n);
 end
-xlabel('OD')
-ylabel('TTD')
+%set(gca,'xscale','log');
+ax = gca; ax.FontSize = tickSize; 
+xlabel('OD (Thresh Levels)', 'FontSize', axisSize)
+ylabel('TTD', 'FontSize', axisSize)
+title('Estimated TDD', 'FontSize', TitleSize)
+xlim([0.19, 0.41]);
 
 %% Plot linear fit regarding each measurement curve
-fig_measure = plotTTDCurves(timeMeasure, filtMeasurementData);
-title('Measurement Curves')
-
+subplot(2,2,3);
+hold on; grid on;
+%fig_measure = plotTTDCurves(timeMeasure, filtMeasurementData, lineW/2);
 for i = 1 : numCurves
-    plot(TTD(i, :), polyval(p(i, :) ,TTD(i, :)), 'r');
+    semilogx(TTD(i, :), polyval(p(i, :) ,TTD(i, :)), 'LineWidth', lineW);
 end
+set(gca,'xscale','log');
+ax = gca; ax.FontSize = tickSize;
+xlabel('log(N)', 'FontSize', axisSize)
+ylabel('Optical Density', 'FontSize', axisSize)
+title('Estimated First Order Lines', 'FontSize', TitleSize)
+xlim([5, 14]);
+ylim([0, 0.6]);
+
+subplot(2,2,4)
+plotTTDCurves(timeCalibration, filtCalibrationData, lineW/2);
+set(gca,'xscale','log');
+ax = gca; ax.FontSize = tickSize;
+title('Calibration Curves', 'FontSize', TitleSize)
+xlabel('log(N)', 'FontSize', axisSize)
+ylabel('Optical Density', 'FontSize', axisSize)
